@@ -10,4 +10,5 @@ services:
     volumes:
     - ./:/usr/src/app
     - /usr/src/app/node_modules
+    network_mode: host
     container_name: nodeapp
