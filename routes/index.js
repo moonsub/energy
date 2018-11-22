@@ -3,23 +3,13 @@ var router = express.Router();
 const {check, validationResult} = require('express-validator/check');
 const {Elec, Factor, Gas, Sequelize: {Op}} = require('../models');
 
-const PREDICT_ERR_MESSAGE = 'predict is not correct, 1 : acture, 2 : prediction'
-const PERIOD_ERR_MESSAGE = 'period is not correct, 1 : 15min, 2 : hour, 3 : day, 4 : month'
-const DATE_ERR_MESSAGE = 'Start time must precede end time'
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
 /* GET Elec. */
-router.get('/elec', [
-    check('building').exists(),
-    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
-    check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
-    check('end').exists(),
-    check('begin')
-        .custom((value, {req}) => value <= req.query.end).withMessage(DATE_ERR_MESSAGE)
-], async function (req, res, next) {
+router.get('/elec', checkQuery(), async function (req, res, next) {
     const {building, predict, period, begin, end} = req.query;
     console.log(building, predict, period, begin, end);
     const errors = validationResult(req);
@@ -44,14 +34,7 @@ router.get('/elec', [
 });
 
 /* GET Factor. */
-router.get('/factor', [
-    check('building').exists(),
-    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
-    check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
-    check('end').exists(),
-    check('begin')
-        .custom((value, {req}) => value <= req.query.end).withMessage(DATE_ERR_MESSAGE)
-], async function (req, res, next) {
+router.get('/factor', checkQuery(), async function (req, res, next) {
     const {building, predict, period, begin, end} = req.query;
     console.log(building, predict, period, begin, end);
     const errors = validationResult(req);
@@ -76,14 +59,7 @@ router.get('/factor', [
 });
 
 /* GET Gas. */
-router.get('/gas', [
-    check('building').exists(),
-    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
-    check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
-    check('end').exists(),
-    check('begin')
-        .custom((value, {req}) => value <= req.query.end).withMessage(DATE_ERR_MESSAGE)
-], async function (req, res, next) {
+router.get('/gas', checkQuery(), async function (req, res, next) {
     const {building, predict, period, begin, end} = req.query;
     console.log(building, predict, period, begin, end);
     const errors = validationResult(req);
@@ -106,5 +82,21 @@ router.get('/gas', [
     res.status(200).json(result);
 
 });
+
+function checkQuery() {
+    return [
+        check('building')
+            .exists().withMessage('building must be in'),
+        check('predict')
+            .isIn(['1', '2']).withMessage('predict must be in, 1 : acture, 2 : prediction'),
+        check('period')
+            .isIn(['1', '2', '3', '4']).withMessage('period must be in, 1 : 15min, 2 : hour, 3 : day, 4 : month'),
+        check('end')
+            .exists().withMessage('end must be in'),
+        check('begin')
+            .exists().withMessage('begin must be in')
+            .custom((value, {req}) => value <= req.query.end).withMessage('Start time must precede end time')
+    ]
+}
 
 module.exports = router;
