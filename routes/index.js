@@ -3,7 +3,7 @@ var router = express.Router();
 const {check, validationResult} = require('express-validator/check');
 const {Elec, Factor, Gas, Sequelize: {Op}} = require('../models');
 
-
+const PREDICT_ERR_MESSAGE = 'predict is not correct, 1 : acture, 2 : prediction'
 const PERIOD_ERR_MESSAGE = 'period is not correct, 1 : 15min, 2 : hour, 3 : day, 4 : month'
 const DATE_ERR_MESSAGE = 'Start time must precede end time'
 /* GET home page. */
@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 /* GET Elec. */
 router.get('/elec', [
     check('building').exists(),
-    check('predict').exists(),
+    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
     check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
     check('end').exists(),
     check('begin')
@@ -46,7 +46,7 @@ router.get('/elec', [
 /* GET Factor. */
 router.get('/factor', [
     check('building').exists(),
-    check('predict').exists(),
+    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
     check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
     check('end').exists(),
     check('begin')
@@ -78,7 +78,7 @@ router.get('/factor', [
 /* GET Gas. */
 router.get('/gas', [
     check('building').exists(),
-    check('predict').exists(),
+    check('predict').exists().isIn(['1', '2']).withMessage(PREDICT_ERR_MESSAGE),
     check('period').exists().isIn(['1', '2', '3', '4']).withMessage(PERIOD_ERR_MESSAGE),
     check('end').exists(),
     check('begin')
