@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const {check, validationResult} = require('express-validator/check');
-const {Elec, Factor, Gas, Sequelize: {Op}} = require('../models');
+const {Elec, Factor, Gas, FactorPercent, Sequelize: {Op}} = require('../../../models/index');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -82,6 +82,57 @@ router.get('/gas', checkQuery(), async function (req, res, next) {
     res.status(200).json(result);
 
 });
+
+/* GET Factor Percent. */
+router.get('/factor/percent', checkQuery(), async function (req, res, next) {
+    const {building, predict, period, begin, end} = req.query;
+    console.log(building, predict, period, begin, end);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+
+    const result = await FactorPercent.findAll({
+        where: {
+            building_code: building,
+            gubun_code   : predict,
+            period       : period,
+            datetime     : {
+                [Op.gte]: begin,
+                [Op.lte]: end
+            }
+
+        }
+    });
+    res.status(200).json(result);
+
+});
+
+/* GET Price. */
+router.get('/price', checkQuery(), async function (req, res, next) {
+    const {building, predict, period, begin, end} = req.query;
+    console.log(building, predict, period, begin, end);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+
+    const result = await FactorPercent.findAll({
+        where: {
+            building_code: building,
+            gubun_code   : predict,
+            period       : period,
+            datetime     : {
+                [Op.gte]: begin,
+                [Op.lte]: end
+            }
+
+        }
+    });
+    res.status(200).json(result);
+
+});
+
 
 function checkQuery() {
     return [

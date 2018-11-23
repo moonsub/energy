@@ -15,5 +15,6 @@ db.Sequelize = Sequelize;
 db.Elec = require('./elec')(sequelize, Sequelize);
 db.Factor = require('./factor')(sequelize, Sequelize);
 db.Gas = require('./gas')(sequelize, Sequelize);
+db.FactorPercent = require('./factorpercent')(sequelize, Sequelize);
 
 module.exports = db;
