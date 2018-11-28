@@ -137,15 +137,15 @@ router.get('/price', checkQuery(), async function (req, res, next) {
 function checkQuery() {
     return [
         check('building')
-            .exists().withMessage('building must be in'),
+            .exists().withMessage('parameter "building" must be in'),
         check('predict')
-            .isIn(['1', '2']).withMessage('predict must be in, 1 : acture, 2 : prediction'),
+            .isIn(['1', '2']).withMessage('parameter "predict" must be in, 1 : acture, 2 : prediction'),
         check('period')
-            .isIn(['1', '2', '3', '4']).withMessage('period must be in, 1 : 15min, 2 : hour, 3 : day, 4 : month'),
+            .isIn(['1', '2', '3', '4']).withMessage('parameter "period" must be in, 1 : 15min, 2 : hour, 3 : day, 4 : month'),
         check('end')
-            .exists().withMessage('end must be in'),
+            .exists().withMessage('parameter "end" must be in'),
         check('begin')
-            .exists().withMessage('begin must be in')
+            .exists().withMessage('parameter "begin" must be in')
             .custom((value, {req}) => value <= req.query.end).withMessage('Start time must precede end time')
     ]
 }
