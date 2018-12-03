@@ -16,6 +16,9 @@ db.Elec = require('./elec')(sequelize, Sequelize);
 db.Factor = require('./factor')(sequelize, Sequelize);
 db.Gas = require('./gas')(sequelize, Sequelize);
 db.FactorPercent = require('./factorpercent')(sequelize, Sequelize);
+<<<<<<< HEAD
 db.EnergyPrice = require('./energy_price')(sequelize, Sequelize);
+=======
+>>>>>>> 9a29ffa20b98766e6a63c099ee0a75ff018271fd
 
 module.exports = db;
